@@ -2,9 +2,11 @@
 .mypy_cache
 .virtual_documents
 calulus_notes
+calculus.pdf
 demo_notes
 notes
 tmp
 venv
 .env
 log.txt
+deploy
