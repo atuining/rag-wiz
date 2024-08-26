@@ -130,7 +130,7 @@ platformdirs==4.2.2
 portalocker==2.10.1
 prometheus_client==0.20.0
 prompt_toolkit==3.0.47
-protobuf==5.27.3
+protobuf
 psutil==6.0.0
 ptyprocess==0.7.0
 pure_eval==0.2.3
