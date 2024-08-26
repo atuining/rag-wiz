@@ -1,0 +1,10 @@
+.ipynb_checkpoints
+.mypy_cache
+.virtual_documents
+calulus_notes
+demo_notes
+notes
+tmp
+venv
+.env
+log.txt
