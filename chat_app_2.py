@@ -3,6 +3,7 @@ import tempfile
 import requests
 import streamlit as st
 from groq import Groq
+from dotenv import load_dotenv
 from langchain_nomic.embeddings import NomicEmbeddings
 from langchain_groq import ChatGroq
 from langchain.memory import ConversationBufferMemory
@@ -18,12 +19,7 @@ from langchain_core.callbacks import BaseCallbackHandler
 from langchain_core.tools import tool
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-os.environ[
-    "GROQ_API_KEY"] = "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"
-model = "llama-3.1-70b-versatile"
-os.environ["WOLFRAM_ALPHA_APPID"] = "Y89ETU-L7Y6WK73H8"
-os.environ["USER_AGENT"] = "myagent"
-os.environ["TAVILY_API_KEY"] = "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"
+load_dotenv()
 
 st.set_page_config(page_title="Agentic Wizlearnr")
 st.title("Calculus Assistant")

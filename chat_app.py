@@ -1,6 +1,7 @@
 import os
 import re
 import requests
+from dotenv import load_dotenv
 from groq import Groq
 import streamlit as st
 from langchain_community.document_loaders import PyPDFDirectoryLoader
@@ -17,14 +18,7 @@ from langchain_text_splitters import CharacterTextSplitter
 from langchain_milvus import Zilliz
 from langchain_core.messages import HumanMessage, AIMessage, ToolMessage
 
-os.environ[
-    "GROQ_API_KEY"] = "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"
-model = "llama-3.1-70b-versatile"
-os.environ["WOLFRAM_ALPHA_APPID"] = "Y89ETU-L7Y6WK73H8"
-os.environ["USER_AGENT"] = "myagent"
-os.environ["TAVILY_API_KEY"] = "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"
-os.environ["ZILLIZ_TOKEN"]="7e59b4419123f4ec6ceaa17aed0c710b9d656484d975aecae74c83d941e28abb0d1908a4cf870ed8fd267fc0ddab51aab1bed9bf"
-os.environ["ZILLIZ_URI"]="https://in03-209ae722b58c1e4.api.gcp-us-west1.zillizcloud.com"
+load_dotenv()
 
 DIRECTORY_PATH = "demo_notes/"
 CHUNK_SIZE = 2000
