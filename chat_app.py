@@ -19,6 +19,7 @@ from langchain_milvus import Zilliz
 from langchain_core.messages import HumanMessage, AIMessage, ToolMessage
 
 load_dotenv()
+model = "llama-3.1-70b-versatile"
 
 DIRECTORY_PATH = "demo_notes/"
 CHUNK_SIZE = 2000
@@ -51,8 +52,8 @@ vectorstore = Zilliz(
     embedding_function=embeddings,
     collection_name="LangChainCollection",
     connection_args={
-        "uri":os.environ.get("ZILLIZ_URI"),
-        "token":os.environ.get("ZILLIZ_TOKEN"),
+        "uri":st.secrets["ZILLIZ_URI"],
+        "token":st.secrets["ZILLIZ_TOKEN"],
     }
 )
 
@@ -72,7 +73,7 @@ def wolfram_call(query: str) -> str:
     """
     params = {
         "input": query,
-        "appid": os.environ.get("WOLFRAM_ALPHA_APPID"),
+        "appid": st.secrets["WOLFRAM_ALPHA_APPID"],
         "format": "plaintext",
         "output": "json",
     }
