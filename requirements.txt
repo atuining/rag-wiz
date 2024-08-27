@@ -8,6 +8,7 @@ langchain_milvus==0.1.4
 langchain_nomic==0.1.2
 langchain_text_splitters==0.2.2
 langgraph==0.2.14
+nomic[local]
 pymilvus==2.4.5
 pypdf==4.3.1
 python-dotenv==1.0.1
