@@ -7,12 +7,9 @@ import streamlit as st
 from langchain_community.document_loaders import PyPDFDirectoryLoader
 from langchain_nomic.embeddings import NomicEmbeddings
 from langchain_community.vectorstores import Qdrant
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_groq import ChatGroq
-from langchain.agents import AgentExecutor, create_openai_tools_agent
 from langgraph.checkpoint.memory import MemorySaver  # an in-memory checkpointer
 from langgraph.prebuilt import create_react_agent
-from IPython.display import Latex
 from langchain_core.tools import tool
 from langchain_text_splitters import CharacterTextSplitter
 from langchain_milvus import Zilliz
@@ -120,99 +117,8 @@ config = {"configurable": {"thread_id": "test-thread"}}
 
 st.title("WizLearnrAI")
 
-def print_stream(stream, is_new):
-    
-    # Keep track of the last message container
-    last_message_type = None
-    st.session_state.last_message = None
 
-    # Placeholder for intermediate streaming tokens
-    streaming_content = ""
-    streaming_placeholder = None
-    
-    while msg := next(stream, None):
-        # str message represents an intermediate token being streamed
-        if isinstance(msg, str):
-            # If placeholder is empty, this is the first token of a new message
-            # being streamed. We need to do setup.
-            if not streaming_placeholder:
-                if last_message_type != "ai":
-                    last_message_type = "ai"
-                    st.session_state.last_message = st.chat_message("ai")
-                with st.session_state.last_message:
-                    streaming_placeholder = st.empty()
-            
-            streaming_content += msg
-            streaming_placeholder.write(streaming_content)
-            continue
-        
-        match msg.type:
-            # A message from the user, the easiest case
-            case "human":
-                last_message_type = "human"
-                st.chat_message("human").write(msg.content)
-
-            # A message from the agent is the most complex case, since we need to
-            # handle streaming tokens and tool calls.
-            case "ai":
-                # If we're rendering new messages, store the message in session state
-                if is_new:
-                    st.session_state.messages.append(msg)
-                
-                # If the last message type was not AI, create a new chat message
-                if last_message_type != "ai":
-                    last_message_type = "ai"
-                    st.session_state.last_message = st.chat_message("ai")
-                
-                with st.session_state.last_message:
-                    # If the message has content, write it out.
-                    # Reset the streaming variables to prepare for the next message.
-                    if msg.content:
-                        if streaming_placeholder:
-                            streaming_placeholder.write(msg.content)
-                            streaming_content = ""
-                            streaming_placeholder = None
-                        else:
-                            st.write(msg.content)
-
-                    if msg.tool_calls:
-                        # Create a status container for each tool call and store the
-                        # status container by ID to ensure results are mapped to the
-                        # correct status container.
-                        call_results = {}
-                        for tool_call in msg.tool_calls:
-                            status = st.status(
-                                    f"""Tool Call: {tool_call["name"]}""",
-                                    state="running" if is_new else "complete",
-                                )
-                            call_results[tool_call["id"]] = status
-                            status.write("Input:")
-                            status.write(tool_call["args"])
-
-                        # Expect one ToolMessage for each tool call.
-                        for _ in range(len(call_results)):
-                            tool_result = next(stream)
-                            if not tool_result.type == "tool":
-                                st.error(f"Unexpected ChatMessage type: {tool_result.type}")
-                                st.write(tool_result)
-                                st.stop()
-                            
-                            # Record the message if it's new, and update the correct
-                            # status container with the result
-                            if is_new:
-                                st.session_state.messages.append(tool_result)
-                            status = call_results[tool_result.tool_call_id]
-                            status.write("Output:")
-                            status.write(tool_result.content)
-                            status.update(state="complete")
-
-            # In case of an unexpected message type, log an error and stop
-            case _: 
-                st.error(f"Unexpected ChatMessage type: {msg.type}")
-                st.write(msg)
-                st.stop()
-
-def old_print_stream(stream):
+def print_stream(stream):
     for s in stream:
         message = s["messages"][-1]
         if isinstance(message, HumanMessage):
@@ -233,6 +139,6 @@ def old_print_stream(stream):
 user_query = st.text_input("Enter your query:")
 inputs = {"messages": [("user", user_query)]}
 if st.button("Submit"):
-        old_print_stream(agent.stream(inputs, stream_mode="values", config=config))
+        print_stream(agent.stream(inputs, stream_mode="values", config=config))
         
 
