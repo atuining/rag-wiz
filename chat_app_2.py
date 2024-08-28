@@ -20,6 +20,7 @@ from langchain_core.tools import tool
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 load_dotenv()
+model = "llama-3.1-70b-versatile"
 
 st.set_page_config(page_title="Agentic Wizlearnr")
 st.title("Calculus Assistant")

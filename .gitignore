@@ -1,7 +1,7 @@
 .ipynb_checkpoints
 .mypy_cache
 .virtual_documents
-calulus_notes
+calculus_notes
 calculus.pdf
 demo_notes
 notes
@@ -10,3 +10,4 @@ venv
 .env
 log.txt
 deploy
+.streamlit
